@@ -5,9 +5,9 @@ class User
   include Mongoid::Document
   include Mongoid::Enum
 
-  enum :status, [:awaiting_approval, :approved, :banned]
-  enum :roles, [:author, :editor, :admin], :multiple => true, :default => [], :required => false
-  enum :scopeless, [:missing], scope: false
+  enum :status, ['awaiting_approval', 'approved', 'banned']
+  enum :roles, ['author', 'editor', 'admin'], :multiple => true, :default => [], :required => false
+  enum :scopeless, ['missing'], scope: false
 end
 
 describe Mongoid::Enum do
@@ -15,7 +15,7 @@ describe Mongoid::Enum do
   let(:instance) { User.new }
   let(:alias_name) { :status }
   let(:field_name) { :"_#{alias_name}" }
-  let(:values) { [:awaiting_approval, :approved, :banned] }
+  let(:values) { ['awaiting_approval', 'approved', 'banned'] }
   let(:multiple_field_name) { :"_roles" }
 
   describe "field" do
@@ -59,7 +59,7 @@ describe Mongoid::Enum do
 
       context "when not multiple" do
         it "is a symbol" do
-          expect(klass).to have_field(field_name).of_type(Symbol)
+          expect(klass).to have_field(field_name).of_type(String)
         end
 
         it "validates inclusion in values" do
@@ -96,12 +96,12 @@ describe Mongoid::Enum do
       describe "setter" do
         it "accepts strings" do
           instance.status = 'banned'
-          expect(instance.status).to eq :banned
+          expect(instance.status).to eq 'banned'
         end
 
         it "accepts symbols" do
           instance.status = :banned
-          expect(instance.status).to eq :banned
+          expect(instance.status).to eq 'banned'
         end
       end
 
@@ -109,7 +109,7 @@ describe Mongoid::Enum do
         it "sets the value" do
           instance.save
           instance.banned!
-          expect(instance.status).to eq :banned
+          expect(instance.status).to eq 'banned'
         end
       end
 
@@ -135,12 +135,12 @@ describe Mongoid::Enum do
       describe "setter" do
         it "accepts strings" do
           instance.roles = "author"
-          expect(instance.roles).to eq [:author]
+          expect(instance.roles).to eq ['author']
         end
 
         it "accepts symbols" do
           instance.roles = :author
-          expect(instance.roles).to eq [:author]
+          expect(instance.roles).to eq ['author']
         end
 
         it "accepts arrays of strings" do
@@ -148,14 +148,14 @@ describe Mongoid::Enum do
           instance.save
           puts instance.errors.full_messages
           instance.reload
-          expect(instance.roles).to include(:author)
-          expect(instance.roles).to include(:editor)
+          expect(instance.roles).to include('author')
+          expect(instance.roles).to include('editor')
         end
 
         it "accepts arrays of symbols"  do
           instance.roles = [:author, :editor]
-          expect(instance.roles).to include(:author)
-          expect(instance.roles).to include(:editor)
+          expect(instance.roles).to include('author')
+          expect(instance.roles).to include('editor')
         end
       end
 
@@ -165,7 +165,7 @@ describe Mongoid::Enum do
             instance.roles = nil
             instance.save
             instance.author!
-            expect(instance.roles).to eq [:author]
+            expect(instance.roles).to eq ['author']
           end
         end
 
@@ -174,7 +174,7 @@ describe Mongoid::Enum do
             instance.save
             instance.author!
             instance.editor!
-            expect(instance.roles).to eq [:author, :editor]
+            expect(instance.roles).to eq ['author', 'editor']
           end
         end
       end
